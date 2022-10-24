@@ -19,8 +19,9 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
     on<HomePageSetEvent>((event, emit) async {
      try {
         emit(HomePageLoading());
-        
-        final mList = await _welcome.getPeople();
+        const path = "https://swapi.dev/api/people/";
+        _welcome.path = path;
+        final mList = await _welcome.getPeople(_welcome.path);
         emit(HomePageLoaded(mList));        
       } catch (e) {
         emit(HomePageError("Failed to fetch data. is your device online?"));
@@ -30,9 +31,9 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
     on<HomePageChangePage>((event, emit) async {
       try {
         emit(HomePageLoading());
-        String page = event.path.split("?")[1];
-        _welcome.path = "api/people?$page";
-        final mList = await _welcome.getPeople();
+        
+        _welcome.path = event.path;
+        final mList = await _welcome.getPeople(_welcome.path);
         emit(HomePageLoaded(mList));        
       } catch (e) {
         emit(HomePageError("Failed to fetch data. is your device online?"));
@@ -48,21 +49,25 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
       try {
         emit(HomePageLoading());
         if(event.peope.homeworld != null){
-          String path = event.peope.homeworld!.split("dev/")[1];
-          _welcome.path = path;
+           
+          _welcome.path = event.peope.homeworld!;
             planet = await _welcome.getPlanet();
         }
         if(event.peope.vehicles!.isNotEmpty){
-          String path = event.peope.vehicles![0].split("dev/")[1];
-          _welcome.path = path;
+          for (var i = 0; i < event.peope.vehicles!.length; i++) {
+            _welcome.path = event.peope.vehicles![i];
             vehicles = await _welcome.getVehicles();
             listNameVehicles.add(vehicles.name!);
+          }
+          
         }
         if(event.peope.starships!.isNotEmpty){
-          String path = event.peope.starships![0].split("dev/")[1];
-          _welcome.path = path;
+          for (var i = 0; i < event.peope.starships!.length; i++) {
+            _welcome.path = event.peope.starships![i];
             starships = await _welcome.getStarships();
             listNameStarships.add(starships.name!);
+          }
+          
         }
         emit(HomePageDetailPeople(event.peope, planet, listNameVehicles, listNameStarships, event.welcome));        
       } catch (e) {
@@ -85,17 +90,23 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
 
     });
 
-    on<ReportEvent>((event, emit) async {
-      try {
-        emit(HomePageLoading());
-        String page = event.path.split("?")[1];
-        _welcome.path = "api/people?$page";
-        final mList = await _welcome.getPeople();
-        emit(HomePageLoaded(mList));        
-      } catch (e) {
-        emit(HomePageError("Failed to fetch data. is your device online?"));
-      }
-    });
+    // on<ReportEvent>((event, emit) async {
+    //   try {
+       
+        
+    //     _welcome.path =  "https://jsonplaceholder.typicode.com/posts";
+    //     Map<String, dynamic> queryParameters ={
+    //       "userId": 1,
+    //       "dateTime": DateTime.now().toString(),
+    //       "character_name": event.peope.name,
+    //     };
+    //     Map<dynamic, dynamic> res = await _welcome.postReport(_welcome.path, queryParameters );
+        
+              
+    //   } catch (e) {
+    //     emit(HomePageError("Failed to fetch data. is your device online?"));
+    //   }
+    // });
     
   }
 }

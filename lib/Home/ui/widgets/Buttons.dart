@@ -4,11 +4,13 @@ import 'package:flutter/cupertino.dart';
 class Butons extends StatelessWidget {
   final String text;
   final IconData icon;
+  final Color color;
   final Function() onPressed;
   const Butons(
       {Key? key,
       required this.text,
       required this.icon,
+      required this.color,
       required this.onPressed})
       : super(key: key);
 
@@ -18,7 +20,7 @@ class Butons extends StatelessWidget {
       width: 120,
       decoration: BoxDecoration(
         border: Border.all(
-          color: Colors.black,
+          color: color,
           width: 2,
           style: BorderStyle.solid,
         ),

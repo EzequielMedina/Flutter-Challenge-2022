@@ -8,16 +8,17 @@ abstract class HomePageState extends Equatable {
   
 
   get welcome => null;
-  @override
-  get changeSwitch => null;
+  get peope => null;
+  get planet => null;
+  get listNameVehicles => null;
+  get listNameStarships => null;
+  get changeSwitch => false;
 
 }
 
 class HomePageInitial extends HomePageState {
-  final bool _changeSwitch;
-  @override
-  get changeSwitch => _changeSwitch;
-  HomePageInitial(this._changeSwitch) : super();
+   final bool changeSwitch;
+  HomePageInitial(this.changeSwitch) : super();
 }
 
 class HomePageLoading extends HomePageState {
@@ -35,11 +36,12 @@ class HomePageError extends HomePageState {
 }
 
 class HomePageDetailPeople extends HomePageState {
-  final Result peope;
-  final Planeta planet;
-  final List<String> listNameVehicles;
-  final List<String> listNameStarships;
-  final Welcome welcome;
+  final Result? peope;
+  final Planeta? planet;
+  final List<String>? listNameVehicles;
+  final List<String>? listNameStarships;
+  final Welcome? welcome;
+ 
   HomePageDetailPeople(this.peope, this.planet,this.listNameVehicles,this.listNameStarships, this.welcome) : super();
 }
 
@@ -48,6 +50,14 @@ class HomePageDetailPeopleBack extends HomePageState {
   HomePageDetailPeopleBack(this.welcome) : super();
 
    //Welcome get getWelcome => welcome;
+}
+
+class ReportEventState extends HomePageState {
+  final Welcome welcome;
+  final Result peope;
+  final message;
+  ReportEventState(this.welcome, this.peope, this.message) : super();
+
 }
 
 class ChangeSwitchState extends HomePageState {

@@ -9,26 +9,28 @@ class Http {
   }
   Future<dynamic>httpGet(String path) async {
     try {
-      return await _dio!.get(path);
-       
+    final res = await _dio!.get(path);
+       return res;
     } catch (error, stacktrace) {
       if (kDebugMode) {
         print("Exception occured: $error stackTrace: $stacktrace");
       }
-      return Welcome.fromJson({});
+      return null;
     }
   }
 
-  Future<dynamic>httpPost(String path) async {
+  Future<dynamic>httpPost(String path, Map<String, dynamic> queryParameters) async {
     try {
       
-      return await _dio!.post(path);
+      return await _dio!.post(path,
+        data: queryParameters
+      );
        
     } catch (error, stacktrace) {
       if (kDebugMode) {
         print("Exception occured: $error stackTrace: $stacktrace");
       }
-      return Welcome.fromJson({});
+      return null;
     }
   }
 

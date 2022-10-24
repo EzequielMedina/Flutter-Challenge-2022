@@ -12,9 +12,9 @@ import 'package:flutter_challenge_2022/Home/model/vehiculoModel.dart';
 class PeopleStarWart {
   final Http _http;
   final HiveData hiveData =  HiveData();
-  late String path = 'api/people';
+  late String path = "https://swapi.dev/api/people/";
   PeopleStarWart(this._http);
-  Future<Welcome> getPeople() async {
+  Future<Welcome> getPeople(path) async {
      final resp = await _http.httpGet(path);
       return Welcome.fromJson(resp.data);
 
@@ -32,6 +32,11 @@ class PeopleStarWart {
   Future<Starships> getStarships() async {
     final resp =  await _http.httpGet(path);
       return Starships.fromJson(resp.data);
+  }
+
+    Future<Map<dynamic, dynamic>> postReport(path, queryParameters) async {
+    final resp =  await _http.httpPost(path,queryParameters);
+      return resp.data;
   }
 
  

@@ -9,7 +9,6 @@ abstract class DependencyInjectionDio {
   static void initialize(){
     final Dio dio = Dio(
        BaseOptions(
-        baseUrl: "https://swapi.dev/",
         headers: {
           HttpHeaders.contentTypeHeader: "application/json",
         }

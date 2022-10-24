@@ -4,6 +4,7 @@ import 'package:flutter_challenge_2022/Helper/DependecyInjectionDio.dart';
 import 'package:flutter_challenge_2022/Home/ui/screen/HomePage.dart';
 import 'package:flutter_challenge_2022/Router/pages.dart';
 import 'package:flutter_challenge_2022/bloc/home_page_bloc.dart';
+import 'package:flutter_challenge_2022/bloc/menu_page_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import 'Home/model/PeopleStarWartModel.dart';
@@ -25,6 +26,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return  MultiBlocProvider(providers: [
       BlocProvider(create: (_) => HomePageBloc()),
+      BlocProvider(create: (_) => MenuPageBloc())
     ], child:MaterialApp(
         title: 'EL PLANETA TIERRA ESTA SIENDO INVADIDO',
         debugShowCheckedModeBanner: false,
