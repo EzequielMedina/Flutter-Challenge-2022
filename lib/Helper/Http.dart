@@ -7,10 +7,10 @@ class Http {
   Http({required Dio? dio}) {
     _dio = dio;
   }
-  Future<Welcome>httpGet(String path) async {
+  Future<dynamic>httpGet(String path) async {
     try {
-      Response resp = await _dio!.get(path);
-      return Welcome.fromJson(resp.data);
+      return await _dio!.get(path);
+       
     } catch (error, stacktrace) {
       if (kDebugMode) {
         print("Exception occured: $error stackTrace: $stacktrace");
@@ -18,6 +18,20 @@ class Http {
       return Welcome.fromJson({});
     }
   }
+
+  Future<dynamic>httpPost(String path) async {
+    try {
+      
+      return await _dio!.post(path);
+       
+    } catch (error, stacktrace) {
+      if (kDebugMode) {
+        print("Exception occured: $error stackTrace: $stacktrace");
+      }
+      return Welcome.fromJson({});
+    }
+  }
+
 
   Future<HttpResponse<T>> request<T>(
     String path, {

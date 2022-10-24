@@ -4,88 +4,166 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_challenge_2022/Helper/HttpResponse.dart';
 import 'package:flutter_challenge_2022/Home/model/PeopleStarWartModel.dart';
 import 'package:flutter_challenge_2022/Home/repository/PeopleStarWart.dart';
+import 'package:flutter_challenge_2022/Home/ui/widgets/ButtonsCIrcle.dart';
+import 'package:flutter_challenge_2022/Router/pages.dart';
+import 'package:flutter_challenge_2022/Router/pages.dart';
+import 'package:flutter_challenge_2022/Router/routes.dart';
 import 'package:flutter_challenge_2022/bloc/home_page_bloc.dart';
 import 'package:get_it/get_it.dart';
 
-class HomePage extends StatefulWidget {
-  HomePage({super.key});
-
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
+class HomePage extends StatelessWidget {
+  HomePage({key});
   final int _selectedIndex = 0;
   final HomePageBloc _homePageBloc = HomePageBloc();
 
   @override
-  void initState() {
-    super.initState();
-    _homePageBloc.add(HomePageSetEvent());
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color.fromARGB(66, 122, 122, 122),
-      appBar: AppBar(
-          backgroundColor: const Color.fromARGB(31, 129, 127, 127),
-          title: const Text(
-            'EL PLANETA TIERRA ESTA SIENDO INVADIDO',
-            style: TextStyle(fontSize: 16),
-          )),
-      body: BlocBuilder<HomePageBloc, HomePageState>(
-        bloc: _homePageBloc,
-        builder: (context, state) {
-          if (state is HomePageInitial) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (state is HomePageLoading) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (state is HomePageLoaded) {
-            return _listPeople(state);
-          } else if (state is HomePageError) {
-            return Center(
-              child: Text(state.message!),
-            );
-          } else {
-            return const Center(child: CircularProgressIndicator());
-          }
-        },
-      ),
+    return BlocBuilder<HomePageBloc, HomePageState>(
+      bloc: _homePageBloc,
+      builder: (context, state) {
+        return Scaffold(
+            backgroundColor: const Color.fromARGB(66, 122, 122, 122),
+            appBar: AppBar(
+              backgroundColor: const Color.fromARGB(31, 129, 127, 127),
+              title: const Text(
+                'EL PLANETA TIERRA ESTA SIENDO INVADIDO',
+                style: TextStyle(fontSize: 15),
+              ),
+              actions: [
+                IconButton(
+                  icon: const Icon(Icons.menu_outlined),
+                  onPressed: () {
+                    Navigator.pushNamed(context, Routes.menu);
+                  },
+                )
+              ],
+            ),
+            body: _stateApp(state, context),
+            bottomNavigationBar:
+                state is HomePageLoaded || state is HomePageDetailPeopleBack
+                    ? BottomNavigationBar(
+                        items: const [
+                            BottomNavigationBarItem(
+                                icon: Icon(Icons.arrow_left), label: 'Prev'),
+                            BottomNavigationBarItem(
+                                icon: Icon(Icons.arrow_right), label: 'Next'),
+                          ],
+                        currentIndex: _selectedIndex,
+                        selectedItemColor: Colors.amber[800],
+                        onTap: (index) {
+                          _onTapPage(index, state);
+                        })
+                    : null);
+      },
     );
   }
 
-  Stack _listPeople(HomePageLoaded state) {
-    return Stack(
-            alignment: Alignment.bottomCenter,
+  void _onTapPage(int index, HomePageState state) {
+    if (index == 0) {
+      if (state.welcome.previous != null) {
+        _homePageBloc.add(HomePageChangePage(state.welcome.previous!));
+      }
+    } else {
+      if (state.welcome.next != null) {
+        _homePageBloc.add(HomePageChangePage(state.welcome.next!));
+      }
+    }
+  }
+
+  Widget _stateApp(HomePageState state, BuildContext context) {
+    if (state is HomePageInitial) {
+      _homePageBloc.add(HomePageSetEvent());
+      return const Center(child: CircularProgressIndicator());
+    } else if (state is HomePageLoading) {
+      return const Center(child: CircularProgressIndicator());
+    } else if (state is HomePageLoaded) {
+      return _listPeople(state, context);
+    } else if (state is HomePageError) {
+      return Center(
+        child: Text(state.message!),
+      );
+    } else if (state is HomePageDetailPeople) {
+      return _detailsPeople(state, context);
+    } else if (state is HomePageDetailPeopleBack) {
+      return _listPeople(state, context);
+    } else {
+      return const Center(child: CircularProgressIndicator());
+    }
+  }
+
+  Widget _detailsPeople(HomePageDetailPeople state, BuildContext context) {
+    return Stack(alignment: Alignment.center, children: [
+      Image(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+        fit: BoxFit.cover,
+        image: const AssetImage('assest/fondo2.jpg'),
+      ),
+      Card(
+        color: const Color.fromARGB(94, 243, 243, 243),
+        child: SizedBox(
+          width: MediaQuery.of(context).size.width * 0.8,
+          height: MediaQuery.of(context).size.height * 0.4,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              _buildList(state.welcome),
-              const SizedBox(height: 20),
-              BottomNavigationBar(
-                  items: const [
-                    BottomNavigationBarItem(
-                        icon: Icon(Icons.arrow_left), label: 'Prev'),
-                    BottomNavigationBarItem(
-                        icon: Icon(Icons.arrow_right), label: 'Next'),
-                  ],
-                  currentIndex: _selectedIndex,
-                  selectedItemColor: Colors.amber[800],
-                  onTap: (index) {
-                    if (index == 0) {
-                      if (state.welcome.previous != null) {
-                        _homePageBloc
-                            .add(HomePageChangePage(state.welcome.previous!));
-                      }
-                    } else {
-                      if (state.welcome.next != null) {
-                        _homePageBloc
-                            .add(HomePageChangePage(state.welcome.next!));
-                      }
-                    }
-                  }),
+              _textStyle("Nombre", state.peope.name.toString()),
+              _textStyle("Cumpleaños", state.peope.birthYear.toString()),
+              _textStyle("genero", state.peope.gender.toString()),
+              _textStyle("Color de Ojos", state.peope.eyeColor.toString()),
+              _textStyle("Colors de pelo", state.peope.hairColor.toString()),
+              _textStyle("Altura", state.peope.height.toString()),
+              _textStyle("Planeta", state.planet.name.toString()),
+              _textStyle("Masa", state.peope.mass.toString()),
+              for (var i = 0; i < state.listNameStarships.length; i++)
+                _textStyle("Nave", state.listNameStarships[i].toString()),
+              for (var i = 0; i < state.listNameVehicles.length; i++)
+                _textStyle("Vehiculo", state.listNameVehicles[i].toString()),
+              const SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Butons(
+                      text: "Back",
+                      icon: Icons.arrow_back,
+                      onPressed: () {
+                        _homePageBloc.add(HomePageBackEvent(state.welcome));
+                      }),
+                  const SizedBox(width: 10),
+                  Butons(
+                      text: "Report",
+                      icon: Icons.report_gmailerrorred_sharp,
+                      onPressed: () {
+                       _homePageBloc.add(ReportEvent(state.peope,state.welcome));
+                      
+                      }),
+                ],
+              ),
             ],
-          );
+          ),
+        ),
+      ),
+    ]);
+  }
+
+  Text _textStyle(String cadena, String cadenaValue) {
+    return Text("$cadena : $cadenaValue",
+        textAlign: TextAlign.right,
+        style: const TextStyle(
+            color: Colors.black, fontWeight: FontWeight.bold, fontSize: 16));
+  }
+
+  Widget _listPeople(dynamic state, BuildContext context) {
+    return Stack(
+      alignment: Alignment.bottomCenter,
+      children: [
+        Container(
+            alignment: Alignment.bottomCenter,
+            height: MediaQuery.of(context).size.height * 0.8,
+            child: _buildList(state.welcome)),
+        const SizedBox(height: 20),
+      ],
+    );
   }
 
   Widget _buildList(Welcome welcome) {
@@ -103,7 +181,8 @@ class _HomePageState extends State<HomePage> {
           child: CupertinoButton(
             alignment: Alignment.centerLeft,
             onPressed: () {
-              _popup(context, welcome.results![index]);
+              _homePageBloc.add(
+                  HomePageDetailPeopleEvent(welcome.results![index], welcome));
             },
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -243,6 +322,4 @@ class _HomePageState extends State<HomePage> {
       },
     );
   }
-
-  Widget _buildLoading() => const Center(child: CircularProgressIndicator());
 }

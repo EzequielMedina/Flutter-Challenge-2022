@@ -4,21 +4,27 @@
 
 import 'dart:convert';
 
+import 'package:hive_flutter/hive_flutter.dart';
+part 'PeopleStarWartModel.g.dart';
 Welcome welcomeFromJson(String str) => Welcome.fromJson(json.decode(str));
 
 String welcomeToJson(Welcome data) => json.encode(data.toJson());
 
-class Welcome {
+@HiveType(typeId: 0)
+class Welcome extends HiveObject{
     Welcome({
         this.count,
         this.next,
         this.previous,
         this.results,
     });
-
+    @HiveField(0)
     int? count;
+    @HiveField(1)
     String? next;
+    @HiveField(2)
     String? previous;
+    @HiveField(3)
     List<Result>? results;
 
     
@@ -38,8 +44,8 @@ class Welcome {
     };
     Welcome get getWelcome =>  getWelcome;
 }
-
-class Result {
+@HiveType(typeId: 1)
+class Result extends HiveObject{
     Result({
         this.name,
         this.height,
@@ -58,22 +64,37 @@ class Result {
         this.edited,
         this.url,
     });
-
+    @HiveField(0)
     String? name;
+    @HiveField(1)
     String? height;
+    @HiveField(2)
     String? mass;
+    @HiveField(3)
     String? hairColor;
+    @HiveField(4)
     String? skinColor;
+    @HiveField(5)
     String? eyeColor;
+    @HiveField(6)
     String? birthYear;
+    @HiveField(7)
     String? gender;
+    @HiveField(8)
     String? homeworld;
+    @HiveField(9)
     List<String>? films;
+    @HiveField(10)
     List<String>? species;
+    @HiveField(11)
     List<String>? vehicles;
+    @HiveField(12)
     List<String>? starships;
+    @HiveField(13)
     DateTime? created;
+    @HiveField(14)
     DateTime? edited;
+    @HiveField(15)
     String? url;
 
     factory Result.fromJson(Map<String, dynamic> json) => Result(
@@ -117,22 +138,3 @@ class Result {
     
   }
 
-enum Gender { MALE, N_A, FEMALE }
-
-final genderValues = EnumValues({
-    "female": Gender.FEMALE,
-    "male": Gender.MALE,
-    "n/a": Gender.N_A
-});
-
-class EnumValues<T> {
-    Map<String, T>? map;
-    Map<T, String>? reverseMap;
-
-    EnumValues(this.map);
-
-    Map<T, String>? get reverse {
-        reverseMap ??= map!.map((k, v) => MapEntry(v, k));
-        return reverseMap;
-    }
-}

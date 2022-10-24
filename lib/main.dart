@@ -4,9 +4,16 @@ import 'package:flutter_challenge_2022/Helper/DependecyInjectionDio.dart';
 import 'package:flutter_challenge_2022/Home/ui/screen/HomePage.dart';
 import 'package:flutter_challenge_2022/Router/pages.dart';
 import 'package:flutter_challenge_2022/bloc/home_page_bloc.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+
+import 'Home/model/PeopleStarWartModel.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   DependencyInjectionDio.initialize();
+  await Hive.initFlutter();
+  Hive.registerAdapter(WelcomeAdapter());
+  await Hive.openBox('Welcome');
   runApp(const MyApp());
 }
 
