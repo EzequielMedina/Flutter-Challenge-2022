@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_challenge_2022/bloc/home_page_bloc.dart';
-import 'package:flutter_challenge_2022/bloc/menu_page_bloc.dart';
+
 
 class MenuPage extends StatelessWidget {
-  final MenuPageBloc _menuPageBloc = MenuPageBloc();
+  
   MenuPage({key});
 
   @override
   Widget build(BuildContext context) {
+    final HomePageBloc _homeBloc = HomePageBloc();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(31, 129, 127, 127),
@@ -33,16 +34,15 @@ class MenuPage extends StatelessWidget {
                     "\n Desactivar o Activar Conexion",
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                   ),
-                  BlocBuilder<MenuPageBloc, MenuPageState>(
-                      bloc: _menuPageBloc,
+                  BlocBuilder<HomePageBloc, HomePageState>(
+                      bloc: _homeBloc,
                       builder: (context, state) {
                         final changeSwitch = state.changeSwitch;
                         return Switch(
                             value: changeSwitch,
                             onChanged: (value) {
-                              _menuPageBloc.add(MenuPageSetEvent(value));
+                              _homeBloc.add(ChangeSwitchEvent(value));
 
-                              print(state.changeSwitch);
                             });
                       })
                 ],

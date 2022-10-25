@@ -3,22 +3,29 @@ part of 'home_page_bloc.dart';
 
 abstract class HomePageState extends Equatable {
   HomePageState();
+  final bool _changeSwitch = true;
   @override
-  List<Object> get props => [];
+  List<dynamic> get props => [];
   
+     HomePageState copyWith(bool changeSwitch) {
+      return HomePageInitial(changeSwitch);
+  }
 
   get welcome => null;
   get peope => null;
   get planet => null;
   get listNameVehicles => null;
   get listNameStarships => null;
-  get changeSwitch => false;
+  get changeSwitch => _changeSwitch;
 
 }
 
 class HomePageInitial extends HomePageState {
-   final bool changeSwitch;
-  HomePageInitial(this.changeSwitch) : super();
+  
+  final bool _changeSwitch;
+  HomePageInitial( this._changeSwitch) : super();
+  @override
+  get changeSwitch => _changeSwitch;
 }
 
 class HomePageLoading extends HomePageState {
@@ -41,7 +48,10 @@ class HomePageDetailPeople extends HomePageState {
   final List<String>? listNameVehicles;
   final List<String>? listNameStarships;
   final Welcome? welcome;
- 
+
+  @override
+
+  get changeSwitch => _changeSwitch;
   HomePageDetailPeople(this.peope, this.planet,this.listNameVehicles,this.listNameStarships, this.welcome) : super();
 }
 

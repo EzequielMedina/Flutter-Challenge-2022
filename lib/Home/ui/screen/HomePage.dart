@@ -11,7 +11,6 @@ import 'package:flutter_challenge_2022/Router/pages.dart';
 import 'package:flutter_challenge_2022/Router/pages.dart';
 import 'package:flutter_challenge_2022/Router/routes.dart';
 import 'package:flutter_challenge_2022/bloc/home_page_bloc.dart';
-import 'package:flutter_challenge_2022/bloc/menu_page_bloc.dart';
 import 'package:get_it/get_it.dart';
 
 class HomePage extends StatelessWidget {
@@ -95,8 +94,7 @@ class HomePage extends StatelessWidget {
   }
 
   Widget _detailsPeople(dynamic state, BuildContext context) {
-    MenuPageBloc _menuPageBloc = BlocProvider.of<MenuPageBloc>(context);
-    bool conexion = _menuPageBloc.state.changeSwitch;
+    bool conexion = state.changeSwitch;
     return Stack(alignment: Alignment.center, children: [
       Image(
         width: MediaQuery.of(context).size.width,
@@ -142,14 +140,12 @@ class HomePage extends StatelessWidget {
                       color: Colors.red,
                       onPressed: () {
                         if (conexion) {
-                          var report;
                           _reportPeople(state.peope).then((value) {
-                            report = value;
                             ScaffoldMessenger.of(context)
                               ..removeCurrentMaterialBanner()
                               ..showMaterialBanner(MaterialBanner(
                                   content: Text(
-                                      "${report['userId'].toString()},\n${report["dateTime"]},\n${report["character_name"]}\n${report["id"]} "),
+                                      "${value['userId'].toString()},\n${value["dateTime"]},\n${value["character_name"]}\n${value["id"]} "),
                                   actions: [
                                     TextButton(
                                       onPressed: () {
@@ -205,6 +201,7 @@ class HomePage extends StatelessWidget {
           child: CupertinoButton(
             alignment: Alignment.centerLeft,
             onPressed: () {
+              const CircularProgressIndicator();
               _homePageBloc.add(
                   HomePageDetailPeopleEvent(welcome.results![index], welcome));
             },
@@ -231,8 +228,6 @@ class HomePage extends StatelessWidget {
       },
     );
   }
-
-  Widget _buildLoading() => const Center(child: CircularProgressIndicator());
 
   _reportPeople(Result peope) async {
     _peticiones.path = "https://jsonplaceholder.typicode.com/posts";

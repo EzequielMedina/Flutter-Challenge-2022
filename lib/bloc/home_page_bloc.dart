@@ -14,7 +14,7 @@ part 'home_page_state.dart';
 class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
   final HiveData hiveData =  HiveData();
   final _welcome = GetIt.instance<PeopleStarWart>();
-  HomePageBloc() : super(HomePageInitial(false)) {
+  HomePageBloc() : super(HomePageInitial(true)) {
 
     on<HomePageSetEvent>((event, emit) async {
      try {
@@ -47,7 +47,9 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
       List<String> listNameVehicles = [];
       List<String> listNameStarships = [];
       try {
-        emit(HomePageLoading());
+        //emit(HomePageLoading());
+        int valor;
+        await hiveData.saveWelcome(event.welcome).then((value) => print(valor = value));
         if(event.peope.homeworld != null){
            
           _welcome.path = event.peope.homeworld!;
@@ -77,6 +79,8 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
     on<HomePageBackEvent>((event, emit) async {
       try {
         emit(HomePageLoading());
+        Welcome welcome;
+        await hiveData.getWelcome(4).then((value) => print(welcome = value));
          //hiveData.getWelcome(0).then((value) => 
           emit(HomePageDetailPeopleBack(event.welcome));
              
@@ -86,7 +90,7 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
     });
 
     on<ChangeSwitchEvent>((event, emit) async {       
-        emit(HomePageInitial(event.changeSwitch));
+        emit(state.copyWith(event.changeSwitch));
 
     });
 
