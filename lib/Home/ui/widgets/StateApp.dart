@@ -10,18 +10,18 @@ class StateApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final state = homePageBloc.state;
-    if (state is HomePageInitial) {
+    if (state.welcome == null) {
       homePageBloc.add(HomePageSetEvent());
       return const Center(child: CircularProgressIndicator());
     } else if (state is HomePageLoading) {
       return const Center(child: CircularProgressIndicator());
-    } else if (state is HomePageLoaded) {
+    } else if (state.isDetailPeople == false) {
       return ListPeople(homePageBloc: homePageBloc);
     } else if (state is HomePageError) {
       return Center(child: Text(state.message!));
-    } else if (state is HomePageDetailPeople || state is ReportEventState) {
+    } else if (state.isDetailPeople == true) {
       return DetailPeople(homePageBloc: homePageBloc);
-    } else if (state is HomePageDetailPeopleBack) {
+    } else if (state.isDetailPeople == false) {
       return ListPeople(homePageBloc: homePageBloc);
     } else {
       return const Center(child: CircularProgressIndicator());

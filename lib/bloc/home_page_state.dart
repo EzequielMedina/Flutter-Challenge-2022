@@ -1,47 +1,35 @@
 part of 'home_page_bloc.dart';
 
-abstract class HomePageState extends Equatable {
-  HomePageState();
-  late bool _changeSwitch = true;
-  late Welcome? _welcome;
-  late Result? _peope;
-  late dynamic valorIdWelcome;
+class HomePageState extends Equatable {
+  final bool? isDetailPeople;
+  bool? changeSwitch = true;
+  final Welcome? welcome;
+  final Result? peope;
+  final Planeta? planet;
+  late List<dynamic>? listNameVehicles = [];
+  late List<dynamic>? listNameStarships = [];
+  final dynamic valorIdWelcome;
+
+   HomePageState({this.isDetailPeople,this.changeSwitch, this.welcome, this.peope,this.planet, this.listNameVehicles, this.listNameStarships, this.valorIdWelcome});
+     
+     HomePageState copyWith({bool? isDetailPeople, bool? changeSwitch, Welcome? welcome, Result? peope,Planeta? planet, List<dynamic>? listNameVehicles, List<dynamic>? listNameStarships, dynamic valorIdWelcome}) {
+    return HomePageState(
+      isDetailPeople: isDetailPeople ?? this.isDetailPeople,
+      changeSwitch: changeSwitch ?? this.changeSwitch,
+      welcome: welcome ?? this.welcome,
+      peope: peope ?? this.peope,
+      planet: planet ?? this.planet,
+      listNameVehicles: listNameVehicles ?? this.listNameVehicles,
+      listNameStarships: listNameStarships ?? this.listNameStarships,
+      valorIdWelcome: valorIdWelcome ?? this.valorIdWelcome,
+    );
+  }
   @override
-  List<dynamic> get props => [_changeSwitch];
-
-  //  HomePageState copyWith(bool changeSwitch, Welcome? welcome, Result? peope) {
-  //    bool changeSwitch =  _changeSwitch ?? this.changeSwitch;
-  //   final Welcome welcome = _welcome ?? this.welcome;
-  //   final Result peope = _peope ?? this.peope;
-  //   return HomePageInitial(changeSwitch, welcome, peope);
-  // }
-
-  get welcome => null;
-  get peope => null;
-  get planet => null;
-  get listNameVehicles => null;
-  get listNameStarships => null;
-  get changeSwitch => _changeSwitch;
-}
-
-class HomePageInitial extends HomePageState {
-  
-  final bool changeSwitch;
-
-
-  @override
-   List<dynamic> get props => [changeSwitch];
-  HomePageInitial(this.changeSwitch) : super( );
-  
+  List<dynamic> get props => [isDetailPeople, changeSwitch , welcome, peope, listNameVehicles, listNameStarships, valorIdWelcome];
 }
 
 class HomePageLoading extends HomePageState {
   HomePageLoading() : super();
-}
-
-class HomePageLoaded extends HomePageState {
-  final Welcome? welcome;
-  HomePageLoaded(this.welcome) : super();
 }
 
 class HomePageError extends HomePageState {
@@ -49,38 +37,3 @@ class HomePageError extends HomePageState {
   HomePageError(this.message) : super();
 }
 
-class HomePageDetailPeople extends HomePageState {
-  final Result? peope;
-  final Planeta? planet;
-  final List<String>? listNameVehicles;
-  final List<String>? listNameStarships;
-  final dynamic valorIdWelcome;
-  final bool changeSwitch;
-
-  @override
-   List<dynamic> get props => [changeSwitch];
-  HomePageDetailPeople(this.peope, this.planet, this.listNameVehicles,
-      this.listNameStarships,this.changeSwitch, this.valorIdWelcome)
-      : super();
-}
-
-class HomePageDetailPeopleBack extends HomePageState {
-  final Welcome? welcome;
-  HomePageDetailPeopleBack(this.welcome) : super();
-
-  //Welcome get getWelcome => welcome;
-}
-
-class ReportEventState extends HomePageState {
-  final Welcome welcome;
-  final Result peope;
-  final message;
-  ReportEventState(this.welcome, this.peope, this.message) : super();
-}
-
-class ChangeSwitchState extends HomePageState {
-  final bool _changeSwitch;
-  @override
-  get changeSwitch => _changeSwitch;
-  ChangeSwitchState(this._changeSwitch) : super();
-}

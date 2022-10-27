@@ -13,15 +13,6 @@ class MenuPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(31, 129, 127, 127),
         title: const Text('Conexion de la aplicacion'),
-        automaticallyImplyLeading: false,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.pushNamed(context, Routes.home);
-            },
-          )
-        ],
       ),
       body: Center(
         child: Stack(alignment: Alignment.center, children: [
@@ -45,7 +36,7 @@ class MenuPage extends StatelessWidget {
                   BlocBuilder<HomePageBloc, HomePageState>(
                       bloc: homeBloc,
                       builder: (context, state) {
-                        final changeSwitch = state.props[0];
+                        final bool changeSwitch = state.changeSwitch!;
                         return Switch(
                             value: changeSwitch,
                             onChanged: (value) {

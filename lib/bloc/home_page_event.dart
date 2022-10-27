@@ -26,9 +26,8 @@ class HomePageBackEvent extends HomePageEvent {
 }
 
 class ReportEvent extends HomePageEvent {
-  Welcome welcome;
   Result peope;
-  ReportEvent(this.welcome, this.peope);
+  ReportEvent(this.peope);
 }
 
 class ChangeSwitchEvent extends HomePageEvent {

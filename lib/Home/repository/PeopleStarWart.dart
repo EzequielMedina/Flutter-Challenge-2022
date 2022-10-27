@@ -30,7 +30,13 @@ class PeopleStarWart {
     return Starships.fromJson(resp.data);
   }
 
-  Future<Map<dynamic, dynamic>> postReport(path, queryParameters) async {
+  Future<Map<dynamic, dynamic>> postReport(Result peope) async {
+    path = "https://jsonplaceholder.typicode.com/posts";
+    Map<String, dynamic> queryParameters = {
+      "userId": 1,
+      "dateTime": DateTime.now().toString(),
+      "character_name": peope.name,
+    };
     final resp = await _http.httpPost(path, queryParameters);
     return resp.data;
   }

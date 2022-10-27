@@ -33,33 +33,32 @@ class HomePage extends StatelessWidget {
             body: StateApp(
               homePageBloc: _homePageBloc,
             ),
-            bottomNavigationBar:
-                state is HomePageLoaded || state is HomePageDetailPeopleBack
-                    ? BottomNavigationBar(
-                        items: const [
-                            BottomNavigationBarItem(
-                                icon: Icon(Icons.arrow_left), label: 'Prev'),
-                            BottomNavigationBarItem(
-                                icon: Icon(Icons.arrow_right), label: 'Next'),
-                          ],
-                        currentIndex: _selectedIndex,
-                        selectedItemColor: Colors.amber[800],
-                        onTap: (index) {
-                          _onTapPage(index, state);
-                        })
-                    : null);
+            bottomNavigationBar: state.isDetailPeople == false
+                ? BottomNavigationBar(
+                    items: const [
+                        BottomNavigationBarItem(
+                            icon: Icon(Icons.arrow_left), label: 'Prev'),
+                        BottomNavigationBarItem(
+                            icon: Icon(Icons.arrow_right), label: 'Next'),
+                      ],
+                    currentIndex: _selectedIndex,
+                    selectedItemColor: Colors.amber[800],
+                    onTap: (index) {
+                      _onTapPage(index, state);
+                    })
+                : null);
       },
     );
   }
 
   void _onTapPage(int index, HomePageState state) {
     if (index == 0) {
-      if (state.welcome.previous != null) {
-        _homePageBloc.add(HomePageChangePage(state.welcome.previous!));
+      if (state.welcome!.previous != null) {
+        _homePageBloc.add(HomePageChangePage(state.welcome!.previous!));
       }
     } else {
-      if (state.welcome.next != null) {
-        _homePageBloc.add(HomePageChangePage(state.welcome.next!));
+      if (state.welcome!.next != null) {
+        _homePageBloc.add(HomePageChangePage(state.welcome!.next!));
       }
     }
   }

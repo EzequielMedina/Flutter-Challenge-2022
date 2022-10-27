@@ -30,18 +30,18 @@ class DetailPeople extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Texts("Nombre", state.peope.name.toString()),
-              Texts("Cumpleaños", state.peope.birthYear.toString()),
-              Texts("genero", state.peope.gender.toString()),
-              Texts("Color de Ojos", state.peope.eyeColor.toString()),
-              Texts("Colors de pelo", state.peope.hairColor.toString()),
-              Texts("Altura", state.peope.height.toString()),
-              Texts("Planeta", state.planet.name.toString()),
-              Texts("Masa", state.peope.mass.toString()),
-              for (var i = 0; i < state.listNameStarships.length; i++)
-                Texts("Nave", state.listNameStarships[i].toString()),
-              for (var i = 0; i < state.listNameVehicles.length; i++)
-                Texts("Vehiculo", state.listNameVehicles[i].toString()),
+              Texts("Nombre", state.peope!.name.toString()),
+              Texts("Cumpleaños", state.peope!.birthYear.toString()),
+              Texts("genero", state.peope!.gender.toString()),
+              Texts("Color de Ojos", state.peope!.eyeColor.toString()),
+              Texts("Colors de pelo", state.peope!.hairColor.toString()),
+              Texts("Altura", state.peope!.height.toString()),
+              Texts("Planeta", state.planet!.name.toString()),
+              Texts("Masa", state.peope!.mass.toString()),
+              for (var i = 0; i < state.listNameStarships!.length; i++)
+                Texts("Nave", state.listNameStarships![i].toString()),
+              for (var i = 0; i < state.listNameVehicles!.length; i++)
+                Texts("Vehiculo", state.listNameVehicles![i].toString()),
               const SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -61,7 +61,7 @@ class DetailPeople extends StatelessWidget {
                       color: Colors.red,
                       onPressed: () {
                         if (conexion) {
-                          _reportPeople(state.peope).then((value) {
+                          _reportPeople(state.peope!).then((value) {
                             ScaffoldMessenger.of(context)
                               ..removeCurrentMaterialBanner()
                               ..showMaterialBanner(MaterialBanner(
@@ -94,16 +94,5 @@ class DetailPeople extends StatelessWidget {
     ]);
   }
 
-  _reportPeople(Result peope) async {
-    _peticiones.path = "https://jsonplaceholder.typicode.com/posts";
-    Map<String, dynamic> queryParameters = {
-      "userId": 1,
-      "dateTime": DateTime.now().toString(),
-      "character_name": homePageBloc.state.peope.name,
-    };
-    Map<dynamic, dynamic> res =
-        await _peticiones.postReport(_peticiones.path, queryParameters);
-    //homePageBloc.add(ReportEvent(homePageBloc.state.welcome, homePageBloc.state.peope));
-    return res;
-  }
+  _reportPeople(Result peope) async => await _peticiones.postReport(peope);
 }

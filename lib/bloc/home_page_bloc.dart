@@ -14,7 +14,16 @@ part 'home_page_state.dart';
 class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
   final HiveData hiveData = HiveData();
   final _welcome = GetIt.instance<PeopleStarWart>();
-  HomePageBloc() : super(HomePageInitial(true)) {
+  HomePageBloc()
+      : super(HomePageState(
+            isDetailPeople: false,
+            changeSwitch: true,
+            welcome: null,
+            peope: null,
+            planet: null,
+            listNameStarships: null,
+            listNameVehicles: null,
+            valorIdWelcome: null)) {
     on<HomePageSetEvent>((event, emit) async {
       try {
         emit(HomePageLoading());
@@ -29,7 +38,14 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
           welcome = await _welcome.getPeople(_welcome.path);
           await hiveData.put(welcome!, "page=1", "Welcome");
         }
-        emit(HomePageLoaded(welcome));
+        emit(state.copyWith(
+            isDetailPeople: false,
+            changeSwitch: state.changeSwitch,
+            welcome: welcome,
+            peope: state.peope,
+            listNameStarships: state.listNameStarships,
+            listNameVehicles: state.listNameVehicles,
+            valorIdWelcome: state.valorIdWelcome));
       } catch (e) {
         emit(HomePageError("Failed to fetch data. is your device online?"));
       }
@@ -47,7 +63,15 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
           welcome = await _welcome.getPeople(_welcome.path);
           await hiveData.put(welcome!, key, "Welcome");
         }
-        emit(HomePageLoaded(welcome));
+        emit(state.copyWith(
+            isDetailPeople: false,
+            changeSwitch: state.changeSwitch,
+            welcome: welcome,
+            peope: state.peope,
+            planet: state.planet,
+            listNameStarships: state.listNameStarships,
+            listNameVehicles: state.listNameVehicles,
+            valorIdWelcome: state.valorIdWelcome));
       } catch (e) {
         emit(HomePageError("Failed to fetch data. is your device online?"));
       }
@@ -107,8 +131,15 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
             listNameStarships.add(starships!.name.toString());
           }
         }
-        emit(HomePageDetailPeople(event.peope, planet, listNameVehicles,
-            listNameStarships,event.changeSwitch, valorIdWelcome));
+        emit(state.copyWith(
+            isDetailPeople: true,
+            changeSwitch: state.changeSwitch,
+            welcome: welcome,
+            peope: event.peope,
+            planet: planet,
+            listNameStarships: listNameStarships,
+            listNameVehicles: listNameVehicles,
+            valorIdWelcome: valorIdWelcome));
       } catch (e) {
         emit(HomePageError("Failed to fetch data. is your device online?"));
       }
@@ -121,30 +152,28 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
         await hiveData
             .get(event.valorIdWelcome, "Welcome")
             ?.then((value) => welcome = value);
-
-        emit(HomePageDetailPeopleBack(welcome));
+        emit(state.copyWith(
+            isDetailPeople: false,
+            changeSwitch: state.changeSwitch,
+            welcome: welcome,
+            peope: state.peope,
+            listNameStarships: state.listNameStarships,
+            listNameVehicles: state.listNameVehicles,
+            valorIdWelcome: state.valorIdWelcome));
       } catch (e) {
         emit(HomePageError("Failed to fetch data. is your device online?"));
       }
     });
 
     on<ChangeSwitchEvent>((event, emit) async {
-      emit(HomePageInitial(event.changeSwitch));
-    });
-
-    on<ReportEvent>((event, emit) async {
-      try {
-        _welcome.path = "https://jsonplaceholder.typicode.com/posts";
-        Map<String, dynamic> queryParameters = {
-          "userId": 1,
-          "dateTime": DateTime.now().toString(),
-          "character_name": event.peope.name,
-        };
-        Map<dynamic, dynamic> res =
-            await _welcome.postReport(_welcome.path, queryParameters);
-      } catch (e) {
-        emit(HomePageError("Failed to fetch data. is your device online?"));
-      }
+      emit(state.copyWith(
+          isDetailPeople: state.isDetailPeople,
+          changeSwitch: event.changeSwitch,
+          welcome: state.welcome,
+          peope: state.peope,
+          listNameStarships: state.listNameStarships,
+          listNameVehicles: state.listNameVehicles,
+          valorIdWelcome: state.valorIdWelcome));
     });
   }
 }
