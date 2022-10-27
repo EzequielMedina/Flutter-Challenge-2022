@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class Texts extends StatelessWidget {
   final String cadena;
   final String cadenaValue;
-  const Texts(  this.cadena,  this.cadenaValue, {Key? key}) : super(key: key);
+  const Texts(this.cadena, this.cadenaValue, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

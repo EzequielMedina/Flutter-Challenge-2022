@@ -4,52 +4,73 @@
 
 import 'dart:convert';
 
+import 'package:hive_flutter/hive_flutter.dart';
+part 'StarshipsModel.g.dart';
+
 Starships StarshipsFromJson(String str) => Starships.fromJson(json.decode(str));
 
 String StarshipsToJson(Starships data) => json.encode(data.toJson());
 
+@HiveType(typeId: 3)
 class Starships {
-    Starships({
-        this.name,
-        this.model,
-        this.manufacturer,
-        this.costInCredits,
-        this.length,
-        this.maxAtmospheringSpeed,
-        this.crew,
-        this.passengers,
-        this.cargoCapacity,
-        this.consumables,
-        this.hyperdriveRating,
-        this.mglt,
-        this.starshipClass,
-        this.pilots,
-        this.films,
-        this.created,
-        this.edited,
-        this.url,
-    });
+  Starships({
+    this.name,
+    this.model,
+    this.manufacturer,
+    this.costInCredits,
+    this.length,
+    this.maxAtmospheringSpeed,
+    this.crew,
+    this.passengers,
+    this.cargoCapacity,
+    this.consumables,
+    this.hyperdriveRating,
+    this.mglt,
+    this.starshipClass,
+    this.pilots,
+    this.films,
+    this.created,
+    this.edited,
+    this.url,
+  });
+  @HiveField(0)
+  String? name;
+  @HiveField(1)
+  String? model;
+  @HiveField(2)
+  String? manufacturer;
+  @HiveField(3)
+  String? costInCredits;
+  @HiveField(4)
+  String? length;
+  @HiveField(5)
+  String? maxAtmospheringSpeed;
+  @HiveField(6)
+  String? crew;
+  @HiveField(7)
+  String? passengers;
+  @HiveField(8)
+  String? cargoCapacity;
+  @HiveField(9)
+  String? consumables;
+  @HiveField(10)
+  String? hyperdriveRating;
+  @HiveField(11)
+  String? mglt;
+  @HiveField(12)
+  String? starshipClass;
+  @HiveField(13)
+  List<String>? pilots;
+  @HiveField(14)
+  List<String>? films;
+  @HiveField(15)
+  DateTime? created;
+  @HiveField(16)
+  DateTime? edited;
+  @HiveField(17)
+  String? url;
 
-    String? name;
-    String? model;
-    String? manufacturer;
-    String? costInCredits;
-    String? length;
-    String? maxAtmospheringSpeed;
-    String? crew;
-    String? passengers;
-    String? cargoCapacity;
-    String? consumables;
-    String? hyperdriveRating;
-    String? mglt;
-    String? starshipClass;
-    List<String>? pilots;
-    List<String>? films;
-    DateTime? created;
-    DateTime? edited;
-    String? url;
-
-    factory Starships.fromJson(Map<String, dynamic> json) => Starships(
+  factory Starships.fromJson(Map<String, dynamic> json) => Starships(
         name: json["name"],
         model: json["model"],
         manufacturer: json["manufacturer"],
@@ -68,9 +89,9 @@ class Starships {
         created: DateTime.parse(json["created"]),
         edited: DateTime.parse(json["edited"]),
         url: json["url"],
-    );
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "name": name,
         "model": model,
         "manufacturer": manufacturer,
@@ -89,5 +110,5 @@ class Starships {
         "created": created!.toIso8601String(),
         "edited": edited!.toIso8601String(),
         "url": url,
-    };
+      };
 }
